@@ -137,13 +137,17 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ $stats['count'] }} alumni</div>
-                                <div class="text-xs text-gray-500">{{ round(($stats['count'] / $clusterGroups->sum('count')) * 100) }}% dari total</div>
+                                <div class="text-xs text-gray-500">
+                                    {{ $clusterGroups->sum('count') > 0 ? round(($stats['count'] / $clusterGroups->sum('count')) * 100) : 0 }}% dari total
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">Rp {{ number_format($stats['gaji_rata_rata'], 0, ',', '.') }}</div>
                                 @php
-                                    $avgSalary = array_sum(array_column($clusterStats, 'gaji_rata_rata')) / count($clusterStats);
-                                    $pctDiff = $avgSalary > 0 ? ($stats['gaji_rata_rata'] - $avgSalary) / $avgSalary * 100 : 0;
+                                    $clusterCount = count($clusterStats);
+                                    $avgSalary = $clusterCount > 0 ? array_sum(array_column($clusterStats, 'gaji_rata_rata')) / $clusterCount : 0;
+                                    $pctDiff = ($avgSalary > 0 && $stats['gaji_rata_rata'] > 0) ?
+                                        ($stats['gaji_rata_rata'] - $avgSalary) / $avgSalary * 100 : 0;
                                 @endphp
                                 <div class="text-xs {{ $pctDiff >= 0 ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $pctDiff >= 0 ? '+' : '' }}{{ round($pctDiff, 1) }}% dari rata-rata
@@ -152,8 +156,9 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ round($stats['waktu_tunggu_rata_rata'], 1) }} bulan</div>
                                 @php
-                                    $avgWaitTime = array_sum(array_column($clusterStats, 'waktu_tunggu_rata_rata')) / count($clusterStats);
-                                    $wtPctDiff = $avgWaitTime > 0 ? ($stats['waktu_tunggu_rata_rata'] - $avgWaitTime) / $avgWaitTime * 100 : 0;
+                                    $avgWaitTime = $clusterCount > 0 ? array_sum(array_column($clusterStats, 'waktu_tunggu_rata_rata')) / $clusterCount : 0;
+                                    $wtPctDiff = ($avgWaitTime > 0 && $stats['waktu_tunggu_rata_rata'] > 0) ?
+                                        ($stats['waktu_tunggu_rata_rata'] - $avgWaitTime) / $avgWaitTime * 100 : 0;
                                 @endphp
                                 <div class="text-xs {{ $wtPctDiff <= 0 ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $wtPctDiff >= 0 ? '+' : '' }}{{ round($wtPctDiff, 1) }}% dari rata-rata
@@ -163,37 +168,37 @@
                                 <div class="text-sm text-gray-900">
                                     @php
                                         $characteristics = [];
-                                        
+
                                         // Karakteristik berdasarkan gaji
                                         if ($pctDiff >= 20) {
                                             $characteristics[] = 'Gaji tinggi';
                                         } elseif ($pctDiff <= -20) {
                                             $characteristics[] = 'Gaji rendah';
                                         }
-                                        
+
                                         // Karakteristik berdasarkan waktu tunggu
                                         if ($wtPctDiff >= 20) {
                                             $characteristics[] = 'Waktu tunggu lama';
                                         } elseif ($wtPctDiff <= -20) {
                                             $characteristics[] = 'Waktu tunggu singkat';
                                         }
-                                        
+
                                         // Karakteristik berdasarkan bidang pekerjaan
                                         if (!empty($stats['bidang_pekerjaan'])) {
                                             $topField = array_key_first($stats['bidang_pekerjaan']);
                                             $topCount = reset($stats['bidang_pekerjaan']);
                                             $topPct = $stats['count'] > 0 ? ($topCount / $stats['count'] * 100) : 0;
-                                            
+
                                             if ($topPct >= 50) {
                                                 $characteristics[] = "Dominan di $topField";
                                             }
                                         }
-                                        
+
                                         if (empty($characteristics)) {
                                             $characteristics[] = 'Cluster umum';
                                         }
                                     @endphp
-                                    
+
                                     <ul class="list-disc list-inside space-y-1">
                                         @foreach($characteristics as $characteristic)
                                             <li>{{ $characteristic }}</li>
@@ -230,7 +235,7 @@
 document.addEventListener('DOMContentLoaded', function() {
        // Chart data from PHP
     const chartData = {{{ $chartDataJson }}};
-    
+
        // Cluster Distribution Chart
     const distributionCtx = document.getElementById('clusterDistributionChart').getContext('2d');
     new Chart(distributionCtx, {
@@ -274,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
+
         // Salary Chart
         const salaryCtx = document.getElementById('clusterSalaryChart').getContext('2d');
         new Chart(salaryCtx, {
@@ -313,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
+
         // Wait Time Chart
         const waitTimeCtx = document.getElementById('clusterWaitTimeChart').getContext('2d');
         new Chart(waitTimeCtx, {
@@ -352,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
+
         // Job Field Chart (Radar chart)
         const jobFieldCtx = document.getElementById('clusterJobFieldChart').getContext('2d');
         new Chart(jobFieldCtx, {

@@ -15,7 +15,7 @@ use Carbon\Carbon;
 class ClusteringController extends Controller
 {
     protected $clusteringService;
-    
+
     public function __construct(ClusteringService $clusteringService)
     {
         $this->clusteringService = $clusteringService;
@@ -26,13 +26,13 @@ class ClusteringController extends Controller
         $hasilClusterings = HasilClustering::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.clustering.index', compact('hasilClusterings'));
     }
-    
+
     public function create()
     {
         $programStudis = ProgramStudi::all();
         return view('admin.clustering.create', compact('programStudis'));
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -45,10 +45,10 @@ class ClusteringController extends Controller
             'atribut' => 'required|array',
             'atribut.*' => 'string|in:gaji,bidang_pekerjaan,waktu_tunggu,jenjang_pendidikan',
         ]);
-        
+
         // Mulai proses clustering
         $hasilClustering = $this->prosesClusteringData($request);
-        
+
         if ($hasilClustering) {
             return redirect()->route('admin.clustering.show', $hasilClustering->id)
                 ->with('success', 'Proses clustering berhasil dilakukan.');
@@ -56,47 +56,47 @@ class ClusteringController extends Controller
             return back()->with('error', 'Proses clustering gagal. Pastikan data alumni tersedia.');
         }
     }
-    
+
     private function prosesClusteringData($request)
     {
         // Ambil data alumni berdasarkan filter
         $query = AlumniProfile::with(['riwayatPekerjaan', 'pendidikanLanjut']);
-        
+
         if ($request->program_studi_id) {
             $query->where('program_studi_id', $request->program_studi_id);
         }
-        
+
         if ($request->tahun_lulus_awal) {
             $query->where('tahun_lulus', '>=', $request->tahun_lulus_awal);
         }
-        
+
         if ($request->tahun_lulus_akhir) {
             $query->where('tahun_lulus', '<=', $request->tahun_lulus_akhir);
         }
-        
+
         $alumni = $query->get();
-        
+
         // Jika tidak ada data alumni yang memenuhi kriteria
         if ($alumni->isEmpty()) {
             return null;
         }
-        
+
         // Preprocessing data menggunakan service
         $dataForClustering = $this->clusteringService->preprocessData($alumni, $request->atribut);
-        
+
         // Jika data untuk clustering kosong
         if (empty($dataForClustering)) {
             return null;
         }
-        
+
         // Proses clustering menggunakan service
         $hasil = $this->clusteringService->singleLinkageClustering($dataForClustering, $request->jumlah_cluster);
-        
+
         // Jika hasil clustering kosong
         if (empty($hasil)) {
             return null;
         }
-        
+
         // Buat record hasil clustering
         $hasilClustering = HasilClustering::create([
             'nama_proses' => $request->nama_proses,
@@ -111,7 +111,7 @@ class ClusteringController extends Controller
             'hasil' => $hasil['clusters'],
             'waktu_proses' => now(),
         ]);
-        
+
         // Simpan hasil clustering per alumni
         foreach ($hasil['cluster_assignments'] as $alumniId => $clusterId) {
             ClusteringAlumni::create([
@@ -121,51 +121,51 @@ class ClusteringController extends Controller
                 'jarak_ke_centroid' => $hasil['distances'][$alumniId] ?? null,
             ]);
         }
-        
+
         return $hasilClustering;
     }
-    
+
     public function show($id)
     {
         $hasilClustering = HasilClustering::with(['clusteringAlumni.alumniProfile.programStudi'])->findOrFail($id);
-        
+
         // Kelompokkan alumni berdasarkan cluster
         $clusterGroups = $hasilClustering->clusteringAlumni->groupBy('cluster_id');
-        
+
         return view('admin.clustering.show', compact('hasilClustering', 'clusterGroups'));
     }
-    
+
     public function destroy($id)
     {
         $hasilClustering = HasilClustering::findOrFail($id);
         $hasilClustering->delete();
-        
+
         return redirect()->route('admin.clustering.index')
             ->with('success', 'Hasil clustering berhasil dihapus.');
     }
-    
+
     public function dashboard()
     {
         // Ambil hasil clustering terbaru
         $latestClustering = HasilClustering::with(['clusteringAlumni.alumniProfile'])->latest()->first();
-        
+
         if (!$latestClustering) {
             return view('admin.clustering.dashboard')->with('error', 'Belum ada data clustering.');
         }
-        
+
         // Kelompokkan alumni berdasarkan cluster
         $clusterGroups = $latestClustering->clusteringAlumni->groupBy('cluster_id');
-        
+
         // Hitung statistik per cluster
         $clusterStats = [];
-        
+
         foreach ($clusterGroups as $clusterId => $members) {
             $profiles = $members->pluck('alumniProfile');
-            
+
             // Statistik gaji
             $gajiAvg = 0;
             $gajiCount = 0;
-            
+
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                 if ($pekerjaan && $pekerjaan->gaji) {
@@ -173,14 +173,14 @@ class ClusteringController extends Controller
                     $gajiCount++;
                 }
             }
-            
+
             if ($gajiCount > 0) {
                 $gajiAvg = $gajiAvg / $gajiCount;
             }
-            
+
             // Hitung distribusi bidang pekerjaan
             $bidangPekerjaan = [];
-            
+
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                 if ($pekerjaan) {
@@ -191,13 +191,13 @@ class ClusteringController extends Controller
                     $bidangPekerjaan[$bidang]++;
                 }
             }
-            
+
             arsort($bidangPekerjaan);
-            
+
             // Hitung statistik waktu tunggu rata-rata
             $waktuTungguAvg = 0;
             $waktuTungguCount = 0;
-            
+
             foreach ($profiles as $profile) {
                 $firstJob = $profile->riwayatPekerjaan()->orderBy('tanggal_mulai', 'asc')->first();
                 if ($firstJob && $profile->tahun_lulus) {
@@ -210,11 +210,11 @@ class ClusteringController extends Controller
                     }
                 }
             }
-            
+
             if ($waktuTungguCount > 0) {
                 $waktuTungguAvg = $waktuTungguAvg / $waktuTungguCount;
             }
-            
+
             // Hitung distribusi jenjang pendidikan
             $jenjangPendidikan = [
                 'Tidak Lanjut' => 0,
@@ -222,7 +222,7 @@ class ClusteringController extends Controller
                 'S3' => 0,
                 'Lainnya' => 0
             ];
-            
+
             foreach ($profiles as $profile) {
                 $pendidikan = $profile->pendidikanLanjut()->orderBy('jenjang', 'desc')->first();
                 if ($pendidikan) {
@@ -238,7 +238,7 @@ class ClusteringController extends Controller
                     $jenjangPendidikan['Tidak Lanjut']++;
                 }
             }
-            
+
             // Distribusi program studi
             $programStudi = [];
             foreach ($profiles as $profile) {
@@ -248,9 +248,9 @@ class ClusteringController extends Controller
                 }
                 $programStudi[$prodiNama]++;
             }
-            
+
             arsort($programStudi);
-            
+
             $clusterStats[$clusterId] = [
                 'count' => $members->count(),
                 'gaji_rata_rata' => $gajiAvg,
@@ -260,29 +260,29 @@ class ClusteringController extends Controller
                 'program_studi' => $programStudi
             ];
         }
-        
+
         return view('admin.clustering.dashboard', compact('latestClustering', 'clusterGroups', 'clusterStats'));
     }
-    
+
     public function export($id)
     {
-        $hasilClustering = HasilClustering::with(['clusteringAlumni.alumniProfile.programStudi', 
-                                                'clusteringAlumni.alumniProfile.riwayatPekerjaan', 
+        $hasilClustering = HasilClustering::with(['clusteringAlumni.alumniProfile.programStudi',
+                                                'clusteringAlumni.alumniProfile.riwayatPekerjaan',
                                                 'clusteringAlumni.alumniProfile.pendidikanLanjut'])
                                            ->findOrFail($id);
-                                           
+
         // Kelompokkan alumni berdasarkan cluster
         $clusterGroups = $hasilClustering->clusteringAlumni->groupBy('cluster_id');
-        
+
         // Siapkan data untuk diekspor
         $data = [];
         $headers = ['Cluster', 'Nama Alumni', 'NIM', 'Program Studi', 'Tahun Lulus', 'Pekerjaan Terakhir', 'Posisi', 'Gaji'];
-        
+
         foreach ($clusterGroups as $clusterId => $members) {
             foreach ($members as $member) {
                 $alumni = $member->alumniProfile;
                 $pekerjaan = $alumni->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
-                
+
                 $row = [
                     'cluster' => $clusterId + 1,
                     'nama' => $alumni->nama_lengkap,
@@ -293,20 +293,20 @@ class ClusteringController extends Controller
                     'posisi' => $pekerjaan ? $pekerjaan->posisi : '-',
                     'gaji' => $pekerjaan ? 'Rp ' . number_format($pekerjaan->gaji, 0, ',', '.') : '-'
                 ];
-                
+
                 $data[] = $row;
             }
         }
-        
+
         // Cetak statistik per cluster
         $stats = [];
         foreach ($clusterGroups as $clusterId => $members) {
             $profiles = $members->pluck('alumniProfile');
-            
+
             // Statistik gaji
             $gajiAvg = 0;
             $gajiCount = 0;
-            
+
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                 if ($pekerjaan && $pekerjaan->gaji) {
@@ -314,69 +314,74 @@ class ClusteringController extends Controller
                     $gajiCount++;
                 }
             }
-            
+
             if ($gajiCount > 0) {
                 $gajiAvg = $gajiAvg / $gajiCount;
             }
-            
+
             $stats[] = [
                 'cluster' => $clusterId + 1,
                 'jumlah_anggota' => $members->count(),
                 'gaji_rata_rata' => 'Rp ' . number_format($gajiAvg, 0, ',', '.')
             ];
         }
-        
+
         return view('admin.clustering.export', compact('hasilClustering', 'data', 'headers', 'stats'));
     }
-    
+
     public function analisis($id)
     {
         $hasilClustering = HasilClustering::with(['clusteringAlumni.alumniProfile.programStudi'])->findOrFail($id);
-        
+
         // Kelompokkan alumni berdasarkan cluster
         $clusterGroups = $hasilClustering->clusteringAlumni->groupBy('cluster_id');
-        
+
+        // Check if clustering data exists
+        if ($clusterGroups->isEmpty()) {
+            return redirect()->route('admin.clustering.index')
+                ->with('error', 'Data clustering tidak ditemukan atau kosong.');
+        }
+
         // Hitung statistik per cluster
         $clusterStats = [];
         $chartData = [
             'labels' => [],
+            'distribution' => [], // Add distribution data for pie chart
             'gaji' => [],
             'waktuTunggu' => [],
-            'bidangPekerjaan' => [],
-            'jenjangPendidikan' => []
+            'bidangLabels' => [],
+            'bidangData' => []
         ];
-        
+
         foreach ($clusterGroups as $clusterId => $members) {
             $profiles = $members->pluck('alumniProfile');
             $chartData['labels'][] = 'Cluster ' . ($clusterId + 1);
-            
-            // Statistik yang sama dengan dashboard
-            // ... (kode statistik yang sama dengan dashboard)
-            
-            // Statistik gaji
+            $chartData['distribution'][] = $members->count();
+
+            // Statistik gaji dengan proteksi
             $gajiAvg = 0;
             $gajiCount = 0;
-            
+
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
-                if ($pekerjaan && $pekerjaan->gaji) {
+                if ($pekerjaan && $pekerjaan->gaji && $pekerjaan->gaji > 0) {
                     $gajiAvg += $pekerjaan->gaji;
                     $gajiCount++;
                 }
             }
-            
+
             if ($gajiCount > 0) {
                 $gajiAvg = $gajiAvg / $gajiCount;
             }
-            
+
             $chartData['gaji'][] = round($gajiAvg / 1000000, 2); // Konversi ke jutaan untuk chart
-            
+
             // Hitung distribusi bidang pekerjaan
             $bidangPekerjaan = [];
-            
+
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
-                if ($pekerjaan) {
+                if ($pekerjaan && !empty($pekerjaan->bidang_pekerjaan)) {
                     $bidang = $pekerjaan->bidang_pekerjaan;
                     if (!isset($bidangPekerjaan[$bidang])) {
                         $bidangPekerjaan[$bidang] = 0;
@@ -384,30 +389,38 @@ class ClusteringController extends Controller
                     $bidangPekerjaan[$bidang]++;
                 }
             }
-            
-            // Waktu tunggu
+
+            // Sort bidang pekerjaan by count (descending)
+            arsort($bidangPekerjaan);
+
+            // Waktu tunggu dengan proteksi
             $waktuTungguAvg = 0;
             $waktuTungguCount = 0;
-            
+
             foreach ($profiles as $profile) {
                 $firstJob = $profile->riwayatPekerjaan()->orderBy('tanggal_mulai', 'asc')->first();
                 if ($firstJob && $profile->tahun_lulus) {
-                    $tanggalLulus = Carbon::createFromDate($profile->tahun_lulus, 6, 30);
-                    $tanggalMulaiKerja = Carbon::parse($firstJob->tanggal_mulai);
-                    $waktuTunggu = $tanggalLulus->diffInMonths($tanggalMulaiKerja);
-                    if ($waktuTunggu > 0) {
-                        $waktuTungguAvg += $waktuTunggu;
-                        $waktuTungguCount++;
+                    try {
+                        $tanggalLulus = Carbon::createFromDate($profile->tahun_lulus, 6, 30);
+                        $tanggalMulaiKerja = Carbon::parse($firstJob->tanggal_mulai);
+                        $waktuTunggu = $tanggalLulus->diffInMonths($tanggalMulaiKerja);
+                        if ($waktuTunggu >= 0) { // Allow 0 months waiting time
+                            $waktuTungguAvg += $waktuTunggu;
+                            $waktuTungguCount++;
+                        }
+                    } catch (Exception $e) {
+                        // Skip invalid dates
+                        continue;
                     }
                 }
             }
-            
+
             if ($waktuTungguCount > 0) {
                 $waktuTungguAvg = $waktuTungguAvg / $waktuTungguCount;
             }
-            
+
             $chartData['waktuTunggu'][] = round($waktuTungguAvg, 1);
-            
+
             // Simpan data lengkap untuk view
             $clusterStats[$clusterId] = [
                 'count' => $members->count(),
@@ -416,10 +429,16 @@ class ClusteringController extends Controller
                 'bidang_pekerjaan' => $bidangPekerjaan
             ];
         }
-        
+
+        // Pastikan chartData tidak kosong
+        if (empty($chartData['labels'])) {
+            return redirect()->route('admin.clustering.index')
+                ->with('error', 'Data tidak cukup untuk menampilkan analisis.');
+        }
+
         // Konversi chart data ke JSON untuk digunakan di JavaScript
         $chartDataJson = json_encode($chartData);
-        
+
         return view('admin.clustering.analisis', compact('hasilClustering', 'clusterGroups', 'clusterStats', 'chartDataJson'));
     }
 }
