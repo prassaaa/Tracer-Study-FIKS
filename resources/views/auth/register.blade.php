@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - Sistem Tracer Study UNP Kediri</title>
+    <title>Daftar - Sistem Tracer Study FIKS UNP Kediri</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -38,23 +38,23 @@
                 <div class="flex justify-center">
                     <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-16 drop-shadow-lg">
                 </div>
-                <h1 class="text-xl font-bold mt-3">Sistem Tracer Study</h1>
+                <h1 class="text-xl font-bold mt-3">Sistem Tracer Study FIKS</h1>
                 <p class="mt-1 text-blue-100 text-sm">Universitas Nusantara PGRI Kediri</p>
             </div>
-            
+
             <div class="p-6">
                 <h2 class="text-xl font-semibold text-center text-gray-800 mb-6">Pendaftaran Alumni</h2>
-                
+
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
-                    
+
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fas fa-user"></i>
                             </div>
-                            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus 
+                            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
                                 placeholder="Masukkan nama lengkap">
                         </div>
@@ -65,14 +65,14 @@
                             </p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="nim" class="block text-sm font-medium text-gray-700 mb-1">NPM</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fas fa-id-card"></i>
                             </div>
-                            <input id="nim" type="text" name="nim" value="{{ old('nim') }}" required 
+                            <input id="nim" type="text" name="nim" value="{{ old('nim') }}" required
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
                                 placeholder="Masukkan NPM Anda">
                         </div>
@@ -83,14 +83,14 @@
                             </p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required 
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
                                 placeholder="email@example.com">
                         </div>
@@ -101,14 +101,14 @@
                             </p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fas fa-lock"></i>
                             </div>
-                            <input id="password" type="password" name="password" required 
+                            <input id="password" type="password" name="password" required
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
                                 placeholder="Minimal 8 karakter">
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -124,14 +124,14 @@
                             </p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-5">
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fas fa-lock"></i>
                             </div>
-                            <input id="password_confirmation" type="password" name="password_confirmation" required 
+                            <input id="password_confirmation" type="password" name="password_confirmation" required
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
                                 placeholder="Ulangi password">
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mb-5">
                         <div class="bg-blue-50 p-3 rounded-md border-l-4 border-blue-500">
                             <p class="text-sm text-blue-700">
@@ -149,22 +149,22 @@
                             </p>
                         </div>
                     </div>
-                    
+
                     <div>
                         <button type="submit" class="w-full py-2.5 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 btn-hover">
                             <i class="fas fa-user-plus mr-2"></i> Daftar
                         </button>
                     </div>
                 </form>
-                
+
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">Sudah memiliki akun? <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Login</a></p>
                 </div>
             </div>
         </div>
-        
+
         <div class="mt-4 text-center">
-            <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Sistem Tracer Study - UNP Kediri</p>
+            <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - UNP Kediri</p>
         </div>
     </div>
 
@@ -173,7 +173,7 @@
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
             const icon = this.querySelector('i');
-            
+
             if (password.type === 'password') {
                 password.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -189,7 +189,7 @@
         document.getElementById('togglePasswordConfirm').addEventListener('click', function() {
             const passwordConfirm = document.getElementById('password_confirmation');
             const icon = this.querySelector('i');
-            
+
             if (passwordConfirm.type === 'password') {
                 passwordConfirm.type = 'text';
                 icon.classList.remove('fa-eye');

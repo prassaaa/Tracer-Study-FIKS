@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sistem Tracer Study - UNP Kediri</title>
+    <title>Sistem Tracer Study FIKS - UNP Kediri</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <style>
@@ -22,7 +22,7 @@
                 <div class="flex items-center">
                     <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-12">
                     <div class="ml-4">
-                        <h1 class="text-gray-800 text-xl font-bold">Sistem Tracer Study</h1>
+                        <h1 class="text-gray-800 text-xl font-bold">Sistem Tracer Study FIKS</h1>
                         <p class="text-gray-600 text-sm">Universitas Nusantara PGRI Kediri</p>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
         <div class="container mx-auto px-6 py-20">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="w-full md:w-1/2 mb-10 md:mb-0">
-                    <h2 class="text-4xl font-bold leading-tight mb-4">Sistem Tracer Study UNP Kediri</h2>
+                    <h2 class="text-4xl font-bold leading-tight mb-4">Sistem Tracer Study FIKS UNP Kediri</h2>
                     <p class="text-xl mb-6">Memperkuat hubungan alumni dan memajukan pendidikan melalui data yang bermakna.</p>
                     <div class="flex">
                         @auth
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="w-full md:w-1/2">
-                    <img src="{{ asset('images/hero-image.png') }}" alt="Tracer Study Illustration" class="mx-auto">
+                    <img src="{{ asset('images/hero-image.png') }}" alt="Tracer Study FIKS Illustration" class="mx-auto">
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
     <!-- Features Section -->
     <div class="bg-white py-16">
         <div class="container mx-auto px-6">
-            <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Apa itu Tracer Study?</h3>
+            <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Apa itu Tracer Study FIKS?</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="p-6 bg-blue-50 rounded-lg">
                     <div class="text-blue-600 mb-4">
@@ -85,7 +85,7 @@
                         <i class="fas fa-graduation-cap text-4xl"></i>
                     </div>
                     <h4 class="text-xl font-semibold text-gray-800 mb-2">Peningkatan Pendidikan</h4>
-                    <p class="text-gray-600">Data tracer study membantu universitas meningkatkan kualitas pendidikan dan relevansi kurikulum.</p>
+                    <p class="text-gray-600">Data Tracer Study FIKS membantu universitas meningkatkan kualitas pendidikan dan relevansi kurikulum.</p>
                 </div>
             </div>
         </div>
@@ -128,7 +128,7 @@
                                 <p class="text-sm text-gray-600">Alumni Keperawatan 2020</p>
                             </div>
                         </div>
-                        <p class="text-gray-600">"Sistem tracer study ini sangat membantu saya tetap terhubung dengan kampus dan sesama alumni. Data yang dikumpulkan juga bermanfaat untuk pengembangan karir."</p>
+                        <p class="text-gray-600">"Sistem Tracer Study FIKS ini sangat membantu saya tetap terhubung dengan kampus dan sesama alumni. Data yang dikumpulkan juga bermanfaat untuk pengembangan karir."</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
                         <div class="flex items-center mb-4">
@@ -138,7 +138,7 @@
                                 <p class="text-sm text-gray-600">Alumni Pendidikan Biologi 2019</p>
                             </div>
                         </div>
-                        <p class="text-gray-600">"Setelah mengisi survei tracer study, saya mendapatkan banyak insight tentang peluang karir di bidang saya. Analisis data yang disajikan sangat informatif."</p>
+                        <p class="text-gray-600">"Setelah mengisi survei Tracer Study FIKS, saya mendapatkan banyak insight tentang peluang karir di bidang saya. Analisis data yang disajikan sangat informatif."</p>
                     </div>
                     <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
                         <div class="flex items-center mb-4">
@@ -153,7 +153,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Call to Action -->
         <div class="py-16 bg-blue-600 text-white">
             <div class="container mx-auto px-6 text-center">
@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Footer -->
         <footer class="py-10 bg-gray-800 text-white">
             <div class="container mx-auto px-6">
@@ -177,7 +177,7 @@
                         <div class="flex items-center">
                             <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-10">
                             <div class="ml-4">
-                                <h4 class="text-lg font-bold">Sistem Tracer Study</h4>
+                                <h4 class="text-lg font-bold">Sistem Tracer Study FIKS</h4>
                                 <p class="text-sm text-gray-400">Universitas Nusantara PGRI Kediri</p>
                             </div>
                         </div>
@@ -211,7 +211,7 @@
                     </div>
                 </div>
                 <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400">&copy; {{ date('Y') }} Sistem Tracer Study - Universitas Nusantara PGRI Kediri</p>
+                    <p class="text-gray-400">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - Universitas Nusantara PGRI Kediri</p>
                     <div class="flex space-x-4 mt-4 md:mt-0">
                         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>

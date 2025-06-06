@@ -5,7 +5,7 @@
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-10 w-auto">
                     <div class="ml-3">
-                        <span class="text-xl font-semibold text-gray-800">Tracer Study</span>
+                        <span class="text-xl font-semibold text-gray-800">Tracer Study FIKS</span>
                         <span class="hidden md:block text-xs text-gray-500">UNP Kediri</span>
                     </div>
                 </a>
@@ -132,7 +132,7 @@
         const userDropdownButton = document.getElementById('userDropdownButton');
         const userDropdownMenu = document.getElementById('userDropdownMenu');
         let dropdownOpen = false;
-        
+
         if (userDropdownButton && userDropdownMenu) {
             // Toggle dropdown on click
             userDropdownButton.addEventListener('click', function(e) {
@@ -144,25 +144,25 @@
                 }
                 dropdownOpen = !dropdownOpen;
             });
-            
+
             // Add small delay before closing dropdown to make it easier to move cursor to menu
             userDropdownButton.addEventListener('mouseover', function() {
                 userDropdownMenu.classList.remove('hidden');
                 dropdownOpen = true;
             });
-            
+
             // Prevent immediate closing when moving from button to menu
             userDropdownMenu.addEventListener('mouseover', function() {
                 userDropdownMenu.classList.remove('hidden');
                 dropdownOpen = true;
             });
-            
+
             // Add a small delay before hiding when mouse leaves menu
             let timeoutId;
             document.addEventListener('mouseover', function(e) {
                 const isOverDropdown = userDropdownMenu.contains(e.target);
                 const isOverTrigger = userDropdownButton.contains(e.target);
-                
+
                 if (!isOverDropdown && !isOverTrigger && dropdownOpen) {
                     clearTimeout(timeoutId);
                     timeoutId = setTimeout(() => {
@@ -172,16 +172,16 @@
                 }
             });
         }
-        
+
         // Mobile menu handling
         const mobileMenuButton = document.querySelector('.mobile-menu-button');
         const mobileMenu = document.querySelector('.mobile-menu');
-        
+
         if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', function() {
                 mobileMenu.classList.toggle('hidden');
             });
-            
+
             // Close menu when clicking outside
             document.addEventListener('click', function(event) {
                 if (!mobileMenu.classList.contains('hidden')) {

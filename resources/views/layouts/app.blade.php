@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title', 'Sistem Tracer Study UNP Kediri')</title>
+    <title>@yield('title', 'Sistem Tracer Study FIKS UNP Kediri')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('images/logo-unp.png') }}">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -116,16 +116,16 @@
     <div class="flex">
         @auth
             @include('layouts.sidebar')
-            
+
             <main id="main-content" class="flex-1 p-4 lg:p-6 bg-gray-50">
                 <div class="flex justify-between items-center mb-4">
                     <h1 class="text-xl font-bold text-gray-800">@yield('page-title', 'Dashboard')</h1>
-                    
+
                     <button id="sidebar-toggle-desktop" class="hidden md:flex items-center justify-center text-blue-600 hover:text-blue-800 focus:outline-none bg-white rounded-md p-2 shadow-sm">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
-                
+
                 @if(session('success'))
                     <div class="alert-success p-3 mb-4 rounded-md">
                         <div class="flex items-center">
@@ -134,7 +134,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @if(session('error'))
                     <div class="alert-danger p-3 mb-4 rounded-md">
                         <div class="flex items-center">
@@ -143,7 +143,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @if(session('warning'))
                     <div class="alert-warning p-3 mb-4 rounded-md">
                         <div class="flex items-center">
@@ -152,7 +152,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 @if(session('info'))
                     <div class="alert-info p-3 mb-4 rounded-md">
                         <div class="flex items-center">
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 @endif
-                
+
                 <div class="content-card p-4 lg:p-6">
                     @yield('content')
                 </div>
@@ -177,13 +177,13 @@
 
     <footer class="bg-white text-center p-4 mt-6 border-t">
         <div class="container mx-auto">
-            <p class="text-sm text-gray-600">&copy; {{ date('Y') }} Sistem Tracer Study - Universitas Nusantara PGRI (UNP) Kediri</p>
+            <p class="text-sm text-gray-600">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - Universitas Nusantara PGRI (UNP) Kediri</p>
         </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
@@ -191,7 +191,7 @@
             const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
             const sidebarToggleDesktop = document.getElementById('sidebar-toggle-desktop');
             const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
-            
+
             // Function to toggle sidebar on mobile
             function toggleSidebarMobile() {
                 sidebar.classList.toggle('show');
@@ -201,23 +201,23 @@
                     sidebarToggleBtn.style.left = '0';
                 }
             }
-            
+
             // Function to toggle sidebar on desktop
             function toggleSidebarDesktop() {
                 sidebar.classList.toggle('hidden');
                 mainContent.classList.toggle('expanded');
             }
-            
+
             // Mobile toggle button
             if (sidebarToggleBtn) {
                 sidebarToggleBtn.addEventListener('click', toggleSidebarMobile);
             }
-            
+
             // Desktop toggle button
             if (sidebarToggleDesktop) {
                 sidebarToggleDesktop.addEventListener('click', toggleSidebarDesktop);
             }
-            
+
             // Close button in sidebar
             if (sidebarCloseBtn) {
                 sidebarCloseBtn.addEventListener('click', function() {
@@ -225,7 +225,7 @@
                     sidebarToggleBtn.style.left = '0';
                 });
             }
-            
+
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(event) {
                 const isMobile = window.innerWidth < 768;
@@ -236,7 +236,7 @@
                     }
                 }
             });
-            
+
             // Adjust on window resize
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 768) {
@@ -246,7 +246,7 @@
             });
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>

@@ -5,15 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Tracer Study UNP Kediri') }}</title>
+        <title>{{ config('app.name', 'Tracer Study FIKS UNP Kediri') }}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-        
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
+
         <style>
             body {
                 font-family: 'Poppins', sans-serif;
@@ -53,17 +53,17 @@
                             <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-16 drop-shadow-lg">
                         </a>
                     </div>
-                    <h1 class="text-xl font-bold mt-3">Sistem Tracer Study</h1>
+                    <h1 class="text-xl font-bold mt-3">Sistem Tracer Study FIKS</h1>
                     <p class="mt-1 text-blue-100 text-sm">Universitas Nusantara PGRI Kediri</p>
                 </div>
-                
+
                 <div class="p-6">
                     {{ $slot }}
                 </div>
             </div>
-            
+
             <div class="mt-4 text-center">
-                <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Sistem Tracer Study - UNP Kediri</p>
+                <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - UNP Kediri</p>
             </div>
         </div>
     </body>

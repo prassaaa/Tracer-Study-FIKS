@@ -22,7 +22,7 @@
                 <h3 class="text-xl font-semibold text-gray-700">Universitas Nusantara PGRI Kediri</h3>
                 <p class="text-gray-600">{{ $hasilClustering->nama_proses }}</p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div>
                     <h4 class="text-lg font-semibold text-gray-800 mb-3">Informasi Clustering</h4>
@@ -90,7 +90,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="mb-8">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Statistik Cluster</h3>
             <div class="overflow-x-auto">
@@ -126,7 +126,7 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="mb-8">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Daftar Alumni per Cluster</h3>
             <div class="overflow-x-auto">
@@ -154,9 +154,9 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="text-sm text-gray-500 mt-8 pt-6 border-t">
-            <p>Laporan ini dibuat otomatis oleh Sistem Tracer Study UNP Kediri pada {{ now()->format('d M Y H:i') }}.</p>
+            <p>Laporan ini dibuat otomatis oleh Sistem Tracer Study FIKS UNP Kediri pada {{ now()->format('d M Y H:i') }}.</p>
             <p>Metode Single Linkage Clustering digunakan untuk mengelompokkan alumni berdasarkan kesamaan karakteristik.</p>
         </div>
     </div>
@@ -167,13 +167,13 @@
     function printReport() {
         const printContents = document.getElementById('report-content').innerHTML;
         const originalContents = document.body.innerHTML;
-        
+
         document.body.innerHTML = `
             <div style="padding: 20px;">
                 ${printContents}
             </div>
         `;
-        
+
         window.print();
         document.body.innerHTML = originalContents;
     }

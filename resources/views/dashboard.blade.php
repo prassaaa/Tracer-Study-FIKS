@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <p class="text-gray-600">Selamat datang di Sistem Tracer Study UNP Kediri</p>
+        <p class="text-gray-600">Selamat datang di Sistem Tracer Study FIKS UNP Kediri</p>
     </div>
 
     @if(Auth::user()->role === 'admin')
@@ -109,12 +109,12 @@
                     <canvas id="alumniApprovalChart"></canvas>
                 </div>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribusi Alumni per Program Studi</h3>
                 <canvas id="alumniPerProdiChart" height="300"></canvas>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm lg:col-span-2">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Alumni Terbaru</h3>
                 <div class="overflow-x-auto">
@@ -140,7 +140,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            
+
                             @if(\App\Models\AlumniProfile::count() == 0)
                                 <tr>
                                     <td colspan="5" class="px-6 py-4 text-center text-gray-500">
@@ -212,11 +212,11 @@
                         <div class="bg-blue-50 rounded-lg p-4">
                             <h4 class="font-semibold text-gray-700 mb-2">Kelengkapan Profil</h4>
                             @php
-                                $isProfileComplete = $profile && 
-                                                    $profile->jenis_kelamin && 
-                                                    $profile->tanggal_lahir && 
-                                                    $profile->program_studi_id && 
-                                                    $profile->tahun_masuk && 
+                                $isProfileComplete = $profile &&
+                                                    $profile->jenis_kelamin &&
+                                                    $profile->tanggal_lahir &&
+                                                    $profile->program_studi_id &&
+                                                    $profile->tahun_masuk &&
                                                     $profile->tahun_lulus;
                             @endphp
                             @if(!$isProfileComplete)
@@ -246,7 +246,7 @@
                             @endif
                         </div>
                     </div>
-                    
+
                     @if(Auth::user()->status === 'approved')
                         <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-4">Survei Aktif</h3>
                         <div class="space-y-4">
@@ -259,7 +259,7 @@
                                     <a href="{{ route('alumni.survei.show', $survei->id) }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Isi Survei</a>
                                 </div>
                             @endforeach
-                            
+
                             @if(\App\Models\Survei::where('aktif', true)->where('tanggal_mulai', '<=', now())->where('tanggal_selesai', '>=', now())->count() == 0)
                                 <div class="bg-gray-50 rounded-lg p-4 text-center text-gray-600">
                                     <p>Tidak ada survei aktif saat ini.</p>
@@ -270,7 +270,7 @@
                 </div>
             </div>
         </div>
-        
+
         @if(Auth::user()->status === 'approved' && $profile && count($pekerjaan ?? []) > 0)
             <div class="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Pekerjaan Terkini</h3>
@@ -284,8 +284,8 @@
                             <p class="text-gray-600">{{ $pekerjaanTerkini->nama_perusahaan }}</p>
                             <p class="text-gray-500 text-sm">{{ $pekerjaanTerkini->lokasi }}</p>
                             <p class="text-gray-500 text-sm mt-2">
-                                <i class="far fa-calendar-alt mr-1"></i> 
-                                {{ \Carbon\Carbon::parse($pekerjaanTerkini->tanggal_mulai)->format('M Y') }} - 
+                                <i class="far fa-calendar-alt mr-1"></i>
+                                {{ \Carbon\Carbon::parse($pekerjaanTerkini->tanggal_mulai)->format('M Y') }} -
                                 {{ $pekerjaanTerkini->tanggal_selesai ? \Carbon\Carbon::parse($pekerjaanTerkini->tanggal_selesai)->format('M Y') : 'Sekarang' }}
                             </p>
                         </div>
@@ -313,7 +313,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Alumni per program studi chart
             const ctxProdi = document.getElementById('alumniPerProdiChart').getContext('2d');
-            
+
             const dataProdi = {
                 labels: [
                     @foreach($alumniPerProdi as $prodi)
@@ -346,7 +346,7 @@
                     borderWidth: 1
                 }]
             };
-            
+
             const prodiChart = new Chart(ctxProdi, {
                 type: 'bar',
                 data: dataProdi,
@@ -365,10 +365,10 @@
                     }
                 }
             });
-            
+
             // Alumni approval status chart
             const ctxApproval = document.getElementById('alumniApprovalChart').getContext('2d');
-            
+
             const dataApproval = {
                 labels: ['Menunggu', 'Disetujui', 'Ditolak'],
                 datasets: [{
@@ -390,7 +390,7 @@
                     borderWidth: 1
                 }]
             };
-            
+
             const approvalChart = new Chart(ctxApproval, {
                 type: 'doughnut',
                 data: dataApproval,
