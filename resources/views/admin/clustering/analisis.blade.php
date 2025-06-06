@@ -7,7 +7,7 @@
         <h1 class="text-2xl font-bold text-gray-800">Analisis Clustering</h1>
         <div>
             <a href="{{ route('admin.clustering.export', $hasilClustering->id) }}" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 mr-2">
-                <i class="fas fa-file-export mr-2"></i> Export Data
+                <i class="fas fa-file-export mr-2"></i> Ekspor Data
             </a>
             <a href="{{ route('admin.clustering.show', $hasilClustering->id) }}" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 mr-2">
                 <i class="fas fa-eye mr-2"></i> Detail
@@ -82,28 +82,38 @@
         </div>
     </div>
 
+    <!-- Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribusi Cluster</h2>
-            <canvas id="clusterDistributionChart" height="300"></canvas>
+            <div class="relative h-80">
+                <canvas id="clusterDistributionChart"></canvas>
+            </div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Rata-rata Gaji per Cluster</h2>
-            <canvas id="clusterSalaryChart" height="300"></canvas>
+            <div class="relative h-80">
+                <canvas id="clusterSalaryChart"></canvas>
+            </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Rata-rata Waktu Tunggu per Cluster</h2>
-            <canvas id="clusterWaitTimeChart" height="300"></canvas>
+            <div class="relative h-80">
+                <canvas id="clusterWaitTimeChart"></canvas>
+            </div>
         </div>
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribusi Bidang Pekerjaan</h2>
-            <canvas id="clusterJobFieldChart" height="300"></canvas>
+            <div class="relative h-80">
+                <canvas id="clusterJobFieldChart"></canvas>
+            </div>
         </div>
     </div>
 
+    <!-- Karakteristik Cluster Table -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Karakteristik Cluster</h2>
         <div class="overflow-x-auto">
@@ -137,17 +147,18 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ $stats['count'] }} alumni</div>
-                                <div class="text-xs text-gray-500">
-                                    {{ $clusterGroups->sum('count') > 0 ? round(($stats['count'] / $clusterGroups->sum('count')) * 100) : 0 }}% dari total
-                                </div>
+                                @php
+                                    $totalCount = collect($clusterStats)->sum('count');
+                                    $percentage = $totalCount > 0 ? round(($stats['count'] / $totalCount) * 100) : 0;
+                                @endphp
+                                <div class="text-xs text-gray-500">{{ $percentage }}% dari total</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">Rp {{ number_format($stats['gaji_rata_rata'], 0, ',', '.') }}</div>
                                 @php
                                     $clusterCount = count($clusterStats);
                                     $avgSalary = $clusterCount > 0 ? array_sum(array_column($clusterStats, 'gaji_rata_rata')) / $clusterCount : 0;
-                                    $pctDiff = ($avgSalary > 0 && $stats['gaji_rata_rata'] > 0) ?
-                                        ($stats['gaji_rata_rata'] - $avgSalary) / $avgSalary * 100 : 0;
+                                    $pctDiff = ($avgSalary > 0) ? ($stats['gaji_rata_rata'] - $avgSalary) / $avgSalary * 100 : 0;
                                 @endphp
                                 <div class="text-xs {{ $pctDiff >= 0 ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $pctDiff >= 0 ? '+' : '' }}{{ round($pctDiff, 1) }}% dari rata-rata
@@ -157,8 +168,7 @@
                                 <div class="text-sm text-gray-900">{{ round($stats['waktu_tunggu_rata_rata'], 1) }} bulan</div>
                                 @php
                                     $avgWaitTime = $clusterCount > 0 ? array_sum(array_column($clusterStats, 'waktu_tunggu_rata_rata')) / $clusterCount : 0;
-                                    $wtPctDiff = ($avgWaitTime > 0 && $stats['waktu_tunggu_rata_rata'] > 0) ?
-                                        ($stats['waktu_tunggu_rata_rata'] - $avgWaitTime) / $avgWaitTime * 100 : 0;
+                                    $wtPctDiff = ($avgWaitTime > 0) ? ($stats['waktu_tunggu_rata_rata'] - $avgWaitTime) / $avgWaitTime * 100 : 0;
                                 @endphp
                                 <div class="text-xs {{ $wtPctDiff <= 0 ? 'text-green-600' : 'text-red-600' }}">
                                     {{ $wtPctDiff >= 0 ? '+' : '' }}{{ round($wtPctDiff, 1) }}% dari rata-rata
@@ -213,6 +223,7 @@
         </div>
     </div>
 
+    <!-- Interpretasi Section -->
     <div class="bg-blue-50 rounded-lg p-6 mb-6">
         <h2 class="text-lg font-semibold text-blue-800 mb-4">Interpretasi Hasil</h2>
         <div class="text-blue-700 space-y-4">
@@ -224,43 +235,59 @@
             </p>
             <p>
                 <span class="font-medium">Rekomendasi:</span> Pihak kampus dapat menggunakan hasil ini untuk menyusun strategi pengembangan kurikulum dan layanan karir berdasarkan karakteristik cluster. Fokus pada penguatan kompetensi yang mendukung lulusan untuk memasuki bidang dengan gaji lebih tinggi dan waktu tunggu lebih singkat.
-        </p>
+            </p>
+        </div>
     </div>
-</div>
-</div>
 @endsection
 
 @push('scripts')
+<!-- Chart.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-       // Chart data from PHP
-    const chartData = {{{ $chartDataJson }}};
+    // Data chart dari PHP - Menggunakan JSON yang aman
+    const chartData = {!! $chartDataJson !!};
 
-       // Cluster Distribution Chart
-    const distributionCtx = document.getElementById('clusterDistributionChart').getContext('2d');
-    new Chart(distributionCtx, {
+    console.log('Chart Data:', chartData); // Debug log
+
+    // Pastikan data ada
+    if (!chartData || !chartData.labels) {
+        console.error('Data chart tidak tersedia');
+        return;
+    }
+
+    // Warna-warna untuk chart
+    const colors = [
+        'rgba(54, 162, 235, 0.7)',
+        'rgba(255, 99, 132, 0.7)',
+        'rgba(255, 206, 86, 0.7)',
+        'rgba(75, 192, 192, 0.7)',
+        'rgba(153, 102, 255, 0.7)',
+        'rgba(255, 159, 64, 0.7)',
+        'rgba(201, 203, 207, 0.7)',
+        'rgba(255, 192, 203, 0.7)',
+        'rgba(144, 238, 144, 0.7)',
+        'rgba(255, 165, 0, 0.7)'
+    ];
+
+    // 1. Chart Distribusi Cluster (Pie Chart)
+    const distributionCtx = document.getElementById('clusterDistributionChart');
+    if (distributionCtx) {
+        new Chart(distributionCtx, {
             type: 'pie',
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    data: chartData.distribution,
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)',
-                        'rgba(201, 203, 207, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(255, 206, 86, 0.7)'
-                    ],
-                    borderWidth: 1
+                    data: chartData.distribution || [],
+                    backgroundColor: colors,
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'right',
@@ -271,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 let label = context.label || '';
                                 let value = context.raw || 0;
                                 let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                let percentage = Math.round((value * 100) / total);
+                                let percentage = total > 0 ? Math.round((value * 100) / total) : 0;
                                 return `${label}: ${value} alumni (${percentage}%)`;
                             }
                         }
@@ -279,23 +306,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
 
-        // Salary Chart
-        const salaryCtx = document.getElementById('clusterSalaryChart').getContext('2d');
+    // 2. Chart Gaji Rata-rata (Bar Chart)
+    const salaryCtx = document.getElementById('clusterSalaryChart');
+    if (salaryCtx) {
         new Chart(salaryCtx, {
             type: 'bar',
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    label: 'Gaji Rata-rata (juta)',
-                    data: chartData.gaji,
+                    label: 'Gaji Rata-rata (Juta Rupiah)',
+                    data: chartData.gaji || [],
                     backgroundColor: 'rgba(54, 162, 235, 0.7)',
                     borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -318,23 +348,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
 
-        // Wait Time Chart
-        const waitTimeCtx = document.getElementById('clusterWaitTimeChart').getContext('2d');
+    // 3. Chart Waktu Tunggu (Bar Chart)
+    const waitTimeCtx = document.getElementById('clusterWaitTimeChart');
+    if (waitTimeCtx) {
         new Chart(waitTimeCtx, {
             type: 'bar',
             data: {
                 labels: chartData.labels,
                 datasets: [{
-                    label: 'Waktu Tunggu (bulan)',
-                    data: chartData.waktuTunggu,
+                    label: 'Waktu Tunggu (Bulan)',
+                    data: chartData.waktuTunggu || [],
                     backgroundColor: 'rgba(255, 99, 132, 0.7)',
                     borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -357,41 +390,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
 
-        // Job Field Chart (Radar chart)
-        const jobFieldCtx = document.getElementById('clusterJobFieldChart').getContext('2d');
-        new Chart(jobFieldCtx, {
-            type: 'radar',
-            data: {
-                labels: chartData.bidangLabels || ['Pendidikan', 'Kesehatan', 'IT', 'Pemerintahan', 'Swasta'],
-                datasets: chartData.bidangData || [{
-                    label: 'Cluster 1',
-                    data: [65, 59, 90, 81, 56],
-                    fill: true,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
-                }]
-            },
-            options: {
-                elements: {
-                    line: {
-                        borderWidth: 3
-                    }
+    // 4. Chart Bidang Pekerjaan (Doughnut Chart sebagai alternatif radar)
+    const jobFieldCtx = document.getElementById('clusterJobFieldChart');
+    if (jobFieldCtx) {
+        // Siapkan data bidang pekerjaan
+        const bidangData = chartData.bidangLabels && chartData.bidangData ?
+            chartData.bidangData : [];
+
+        // Jika tidak ada data bidang khusus, buat chart sederhana
+        if (bidangData.length === 0) {
+            // Buat data dummy atau kosongkan chart
+            new Chart(jobFieldCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tidak ada data'],
+                    datasets: [{
+                        data: [1],
+                        backgroundColor: ['rgba(200, 200, 200, 0.7)'],
+                        borderColor: ['rgba(200, 200, 200, 1)'],
+                        borderWidth: 2
+                    }]
                 },
-                scales: {
-                    r: {
-                        angleLines: {
-                            display: true
-                        },
-                        suggestedMin: 0
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            }
-        });
-    });
+            });
+        } else {
+            new Chart(jobFieldCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.bidangLabels,
+                    datasets: bidangData
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+    }
+});
 </script>
 @endpush

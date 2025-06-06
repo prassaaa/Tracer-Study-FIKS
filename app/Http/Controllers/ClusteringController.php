@@ -336,7 +336,7 @@ class ClusteringController extends Controller
         // Kelompokkan alumni berdasarkan cluster
         $clusterGroups = $hasilClustering->clusteringAlumni->groupBy('cluster_id');
 
-        // Check if clustering data exists
+        // Periksa apakah data clustering ada
         if ($clusterGroups->isEmpty()) {
             return redirect()->route('admin.clustering.index')
                 ->with('error', 'Data clustering tidak ditemukan atau kosong.');
@@ -346,7 +346,7 @@ class ClusteringController extends Controller
         $clusterStats = [];
         $chartData = [
             'labels' => [],
-            'distribution' => [], // Add distribution data for pie chart
+            'distribution' => [],
             'gaji' => [],
             'waktuTunggu' => [],
             'bidangLabels' => [],
@@ -355,26 +355,24 @@ class ClusteringController extends Controller
 
         foreach ($clusterGroups as $clusterId => $members) {
             $profiles = $members->pluck('alumniProfile');
-            $chartData['labels'][] = 'Cluster ' . ($clusterId + 1);
-            $chartData['distribution'][] = $members->count();
+            $clusterLabel = 'Cluster ' . ($clusterId + 1);
+            $chartData['labels'][] = $clusterLabel;
+            $chartData['distribution'][] = (int) $members->count();
 
             // Statistik gaji dengan proteksi
-            $gajiAvg = 0;
+            $gajiTotal = 0;
             $gajiCount = 0;
 
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                 if ($pekerjaan && $pekerjaan->gaji && $pekerjaan->gaji > 0) {
-                    $gajiAvg += $pekerjaan->gaji;
+                    $gajiTotal += (float) $pekerjaan->gaji;
                     $gajiCount++;
                 }
             }
 
-            if ($gajiCount > 0) {
-                $gajiAvg = $gajiAvg / $gajiCount;
-            }
-
-            $chartData['gaji'][] = round($gajiAvg / 1000000, 2); // Konversi ke jutaan untuk chart
+            $gajiAvg = $gajiCount > 0 ? $gajiTotal / $gajiCount : 0;
+            $chartData['gaji'][] = round($gajiAvg / 1000000, 2); // Konversi ke jutaan
 
             // Hitung distribusi bidang pekerjaan
             $bidangPekerjaan = [];
@@ -382,62 +380,62 @@ class ClusteringController extends Controller
             foreach ($profiles as $profile) {
                 $pekerjaan = $profile->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                 if ($pekerjaan && !empty($pekerjaan->bidang_pekerjaan)) {
-                    $bidang = $pekerjaan->bidang_pekerjaan;
-                    if (!isset($bidangPekerjaan[$bidang])) {
-                        $bidangPekerjaan[$bidang] = 0;
-                    }
-                    $bidangPekerjaan[$bidang]++;
+                    $bidang = trim($pekerjaan->bidang_pekerjaan);
+                    $bidangPekerjaan[$bidang] = ($bidangPekerjaan[$bidang] ?? 0) + 1;
                 }
             }
 
-            // Sort bidang pekerjaan by count (descending)
+            // Urutkan bidang pekerjaan berdasarkan jumlah (descending)
             arsort($bidangPekerjaan);
 
             // Waktu tunggu dengan proteksi
-            $waktuTungguAvg = 0;
+            $waktuTungguTotal = 0;
             $waktuTungguCount = 0;
 
             foreach ($profiles as $profile) {
+                if (!$profile->tahun_lulus) continue;
+
                 $firstJob = $profile->riwayatPekerjaan()->orderBy('tanggal_mulai', 'asc')->first();
-                if ($firstJob && $profile->tahun_lulus) {
+                if ($firstJob && $firstJob->tanggal_mulai) {
                     try {
                         $tanggalLulus = Carbon::createFromDate($profile->tahun_lulus, 6, 30);
                         $tanggalMulaiKerja = Carbon::parse($firstJob->tanggal_mulai);
                         $waktuTunggu = $tanggalLulus->diffInMonths($tanggalMulaiKerja);
-                        if ($waktuTunggu >= 0) { // Allow 0 months waiting time
-                            $waktuTungguAvg += $waktuTunggu;
+
+                        if ($waktuTunggu >= 0 && $waktuTunggu <= 60) { // Filter data yang masuk akal
+                            $waktuTungguTotal += $waktuTunggu;
                             $waktuTungguCount++;
                         }
                     } catch (Exception $e) {
-                        // Skip invalid dates
+                        // Skip data tanggal yang tidak valid
                         continue;
                     }
                 }
             }
 
-            if ($waktuTungguCount > 0) {
-                $waktuTungguAvg = $waktuTungguAvg / $waktuTungguCount;
-            }
-
+            $waktuTungguAvg = $waktuTungguCount > 0 ? $waktuTungguTotal / $waktuTungguCount : 0;
             $chartData['waktuTunggu'][] = round($waktuTungguAvg, 1);
 
             // Simpan data lengkap untuk view
             $clusterStats[$clusterId] = [
-                'count' => $members->count(),
+                'count' => (int) $members->count(),
                 'gaji_rata_rata' => $gajiAvg,
                 'waktu_tunggu_rata_rata' => $waktuTungguAvg,
                 'bidang_pekerjaan' => $bidangPekerjaan
             ];
         }
 
-        // Pastikan chartData tidak kosong
-        if (empty($chartData['labels'])) {
-            return redirect()->route('admin.clustering.index')
-                ->with('error', 'Data tidak cukup untuk menampilkan analisis.');
-        }
+        // Pastikan semua data numerik
+        $chartData['labels'] = array_values($chartData['labels']);
+        $chartData['distribution'] = array_values($chartData['distribution']);
+        $chartData['gaji'] = array_values($chartData['gaji']);
+        $chartData['waktuTunggu'] = array_values($chartData['waktuTunggu']);
 
-        // Konversi chart data ke JSON untuk digunakan di JavaScript
-        $chartDataJson = json_encode($chartData);
+        // Konversi chart data ke JSON yang aman
+        $chartDataJson = json_encode($chartData, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+
+        // Debugging - hapus setelah selesai
+        \Log::info('Chart Data:', $chartData);
 
         return view('admin.clustering.analisis', compact('hasilClustering', 'clusterGroups', 'clusterStats', 'chartDataJson'));
     }
