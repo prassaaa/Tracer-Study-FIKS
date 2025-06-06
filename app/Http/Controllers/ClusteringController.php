@@ -353,6 +353,9 @@ class ClusteringController extends Controller
             'bidangData' => []
         ];
 
+        // Kumpulkan semua bidang pekerjaan unik dari semua cluster
+        $allBidangPekerjaan = [];
+
         foreach ($clusterGroups as $clusterId => $members) {
             $profiles = $members->pluck('alumniProfile');
             $clusterLabel = 'Cluster ' . ($clusterId + 1);
@@ -382,6 +385,11 @@ class ClusteringController extends Controller
                 if ($pekerjaan && !empty($pekerjaan->bidang_pekerjaan)) {
                     $bidang = trim($pekerjaan->bidang_pekerjaan);
                     $bidangPekerjaan[$bidang] = ($bidangPekerjaan[$bidang] ?? 0) + 1;
+
+                    // Tambahkan ke collection semua bidang
+                    if (!in_array($bidang, $allBidangPekerjaan)) {
+                        $allBidangPekerjaan[] = $bidang;
+                    }
                 }
             }
 
@@ -423,6 +431,43 @@ class ClusteringController extends Controller
                 'waktu_tunggu_rata_rata' => $waktuTungguAvg,
                 'bidang_pekerjaan' => $bidangPekerjaan
             ];
+        }
+
+        // Siapkan data untuk chart bidang pekerjaan
+        if (!empty($allBidangPekerjaan)) {
+            $chartData['bidangLabels'] = $allBidangPekerjaan;
+
+            // Buat dataset untuk setiap cluster
+            $colors = [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)',
+                'rgba(201, 203, 207, 0.7)',
+                'rgba(255, 192, 203, 0.7)',
+                'rgba(144, 238, 144, 0.7)',
+                'rgba(255, 165, 0, 0.7)'
+            ];
+
+            foreach ($clusterGroups as $clusterId => $members) {
+                $bidangData = [];
+                $bidangPekerjaanCluster = $clusterStats[$clusterId]['bidang_pekerjaan'];
+
+                // Isi data untuk setiap bidang
+                foreach ($allBidangPekerjaan as $bidang) {
+                    $bidangData[] = $bidangPekerjaanCluster[$bidang] ?? 0;
+                }
+
+                $chartData['bidangData'][] = [
+                    'label' => 'Cluster ' . ($clusterId + 1),
+                    'data' => $bidangData,
+                    'backgroundColor' => $colors[$clusterId] ?? 'rgba(128, 128, 128, 0.7)',
+                    'borderColor' => str_replace('0.7', '1', $colors[$clusterId] ?? 'rgba(128, 128, 128, 1)'),
+                    'borderWidth' => 2
+                ];
+            }
         }
 
         // Pastikan semua data numerik

@@ -392,24 +392,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. Chart Bidang Pekerjaan (Doughnut Chart sebagai alternatif radar)
+    // 4. Chart Bidang Pekerjaan (Bar Chart dengan multiple datasets)
     const jobFieldCtx = document.getElementById('clusterJobFieldChart');
     if (jobFieldCtx) {
         // Siapkan data bidang pekerjaan
-        const bidangData = chartData.bidangLabels && chartData.bidangData ?
-            chartData.bidangData : [];
+        const bidangLabels = chartData.bidangLabels || [];
+        const bidangData = chartData.bidangData || [];
 
-        // Jika tidak ada data bidang khusus, buat chart sederhana
-        if (bidangData.length === 0) {
-            // Buat data dummy atau kosongkan chart
+        // Debug log untuk melihat data
+        console.log('Bidang Labels:', bidangLabels);
+        console.log('Bidang Data:', bidangData);
+
+        // Jika tidak ada data bidang, tampilkan pesan
+        if (bidangLabels.length === 0 || bidangData.length === 0) {
+            // Buat chart dengan pesan tidak ada data
             new Chart(jobFieldCtx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: ['Tidak ada data'],
+                    labels: ['Tidak ada data bidang pekerjaan'],
                     datasets: [{
-                        data: [1],
-                        backgroundColor: ['rgba(200, 200, 200, 0.7)'],
-                        borderColor: ['rgba(200, 200, 200, 1)'],
+                        label: 'Tidak ada data',
+                        data: [0],
+                        backgroundColor: 'rgba(200, 200, 200, 0.7)',
+                        borderColor: 'rgba(200, 200, 200, 1)',
                         borderWidth: 2
                     }]
                 },
@@ -418,16 +423,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'top'
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1
                         }
                     }
                 }
             });
         } else {
+            // Buat chart dengan data yang ada
             new Chart(jobFieldCtx, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: chartData.bidangLabels,
+                    labels: bidangLabels,
                     datasets: bidangData
                 },
                 options: {
@@ -435,7 +450,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    let value = context.raw || 0;
+                                    return `${label}: ${value} alumni`;
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    return Math.floor(value) + ' alumni';
+                                }
+                            }
                         }
                     }
                 }
