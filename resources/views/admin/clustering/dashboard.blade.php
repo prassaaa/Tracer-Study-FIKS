@@ -100,7 +100,7 @@
 
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Karakteristik Cluster</h2>
-            
+
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -141,8 +141,16 @@
                                         @php
                                             $bidangPekerjaan = $stats['bidang_pekerjaan'];
                                             $totalCount = array_sum($bidangPekerjaan);
-                                            $dominanBidang = array_keys($bidangPekerjaan, max($bidangPekerjaan))[0] ?? '-';
-                                            $persentase = $totalCount > 0 ? round(max($bidangPekerjaan) / $totalCount * 100) : 0;
+
+                                            // FIX: Cek apakah $bidangPekerjaan tidak kosong sebelum menggunakan max()
+                                            if (!empty($bidangPekerjaan)) {
+                                                $maxValue = max($bidangPekerjaan);
+                                                $dominanBidang = array_keys($bidangPekerjaan, $maxValue)[0];
+                                                $persentase = $totalCount > 0 ? round($maxValue / $totalCount * 100) : 0;
+                                            } else {
+                                                $dominanBidang = 'Tidak ada data';
+                                                $persentase = 0;
+                                            }
                                         @endphp
                                         {{ $dominanBidang }} ({{ $persentase }}%)
                                     </div>
@@ -180,11 +188,16 @@
                                     $programStudi = $stats['program_studi'] ?? [];
                                     arsort($programStudi);
                                 @endphp
-                                
+
                                 @forelse(array_slice($programStudi, 0, 3) as $prodi => $count)
                                     <div class="flex items-center">
                                         <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ ($count / max($programStudi)) * 100 }}%"></div>
+                                            @php
+                                                // FIX: Cek apakah $programStudi tidak kosong sebelum menggunakan max()
+                                                $maxProdiValue = !empty($programStudi) ? max($programStudi) : 1;
+                                                $percentage = $maxProdiValue > 0 ? ($count / $maxProdiValue) * 100 : 0;
+                                            @endphp
+                                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $percentage }}%"></div>
                                         </div>
                                         <span class="ml-4 text-sm text-gray-600 whitespace-nowrap">{{ $prodi }} ({{ $count }})</span>
                                     </div>
@@ -196,7 +209,7 @@
                     @endforeach
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Jenjang Pendidikan per Cluster</h2>
                 <canvas id="clusterEducationChart" height="300"></canvas>
