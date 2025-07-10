@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <style>
         .hero-pattern {
-            background-color: #0056b3;
+            background-color: #1a5f3f;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath fill-rule='evenodd' d='M11 0l5 20H6l5-20zm42 31a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 72h40v4H0v-4zm0-8h31v4H0v-4zm20-16h20v4H20v-4zM0 56h40v4H0v-4zm63-25a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM53 41a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-30 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-28-8a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zM56 5a5 5 0 0 0-10 0h10zm10 0a5 5 0 0 1-10 0h10zm-3 46a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 0l5 20H16l5-20zm43 64v-4h-4v4h-4v4h4v4h4v-4h4v-4h-4zM36 13h4v4h-4v-4zm4 4h4v4h-4v-4zm-4 4h4v4h-4v-4zm8-8h4v4h-4v-4z'/%3E%3C/g%3E%3C/svg%3E");
         }
     </style>
@@ -28,10 +28,10 @@
                 </div>
                 <div class="flex items-center">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="px-4 py-2 text-gray-700 hover:text-green-700">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="px-4 py-2 text-gray-700 hover:text-blue-600">Login</a>
-                        <a href="{{ route('register') }}" class="ml-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Register</a>
+                        <a href="{{ route('login') }}" class="px-4 py-2 text-gray-700 hover:text-green-700">Login</a>
+                        <a href="{{ route('register') }}" class="ml-4 px-6 py-2 bg-green-700 text-white rounded-md hover:bg-green-800">Register</a>
                     @endauth
                 </div>
             </div>
@@ -47,10 +47,10 @@
                     <p class="text-xl mb-6">Memperkuat hubungan alumni dan memajukan pendidikan melalui data yang bermakna.</p>
                     <div class="flex">
                         @auth
-                            <a href="{{ route('dashboard') }}" class="px-6 py-3 bg-white text-blue-600 rounded-md font-semibold hover:bg-gray-100">Akses Dashboard</a>
+                            <a href="{{ route('dashboard') }}" class="px-6 py-3 bg-white text-green-700 rounded-md font-semibold hover:bg-gray-100">Akses Dashboard</a>
                         @else
-                            <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-blue-600 rounded-md font-semibold hover:bg-gray-100">Login</a>
-                            <a href="{{ route('register') }}" class="ml-4 px-6 py-3 border-2 border-white text-white rounded-md font-semibold hover:bg-blue-700">Register</a>
+                            <a href="{{ route('login') }}" class="px-6 py-3 bg-white text-green-700 rounded-md font-semibold hover:bg-gray-100">Login</a>
+                            <a href="{{ route('register') }}" class="ml-4 px-6 py-3 border-2 border-white text-white rounded-md font-semibold hover:bg-green-800">Register</a>
                         @endauth
                     </div>
                 </div>
@@ -66,22 +66,22 @@
         <div class="container mx-auto px-6">
             <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Apa itu Tracer Study FIKS?</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="p-6 bg-blue-50 rounded-lg">
-                    <div class="text-blue-600 mb-4">
+                <div class="p-6 bg-green-50 rounded-lg">
+                    <div class="text-green-700 mb-4">
                         <i class="fas fa-search text-4xl"></i>
                     </div>
                     <h4 class="text-xl font-semibold text-gray-800 mb-2">Penelusuran Alumni</h4>
                     <p class="text-gray-600">Melacak perkembangan karir dan kesuksesan alumni setelah lulus dari universitas.</p>
                 </div>
-                <div class="p-6 bg-blue-50 rounded-lg">
-                    <div class="text-blue-600 mb-4">
+                <div class="p-6 bg-green-50 rounded-lg">
+                    <div class="text-green-700 mb-4">
                         <i class="fas fa-chart-pie text-4xl"></i>
                     </div>
                     <h4 class="text-xl font-semibold text-gray-800 mb-2">Analisis Data</h4>
                     <p class="text-gray-600">Menganalisis data alumni menggunakan metode Single Linkage Clustering untuk mendapatkan wawasan bermakna.</p>
                 </div>
-                <div class="p-6 bg-blue-50 rounded-lg">
-                    <div class="text-blue-600 mb-4">
+                <div class="p-6 bg-green-50 rounded-lg">
+                    <div class="text-green-700 mb-4">
                         <i class="fas fa-graduation-cap text-4xl"></i>
                     </div>
                     <h4 class="text-xl font-semibold text-gray-800 mb-2">Peningkatan Pendidikan</h4>
@@ -96,19 +96,19 @@
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-around">
                 <div class="text-center mb-8 md:mb-0">
-                    <div class="text-4xl font-bold text-blue-600">{{ \App\Models\User::where('role', 'alumni')->count() }}</div>
+                    <div class="text-4xl font-bold text-green-700">{{ \App\Models\User::where('role', 'alumni')->count() }}</div>
                     <div class="text-gray-600 mt-2">Alumni Terdaftar</div>
                 </div>
                 <div class="text-center mb-8 md:mb-0">
-                    <div class="text-4xl font-bold text-blue-600">{{ \App\Models\ProgramStudi::count() }}</div>
+                    <div class="text-4xl font-bold text-green-700">{{ \App\Models\ProgramStudi::count() }}</div>
                     <div class="text-gray-600 mt-2">Program Studi</div>
                 </div>
                 <div class="text-center mb-8 md:mb-0">
-                    <div class="text-4xl font-bold text-blue-600">{{ \App\Models\RiwayatPekerjaan::count() }}</div>
+                    <div class="text-4xl font-bold text-green-700">{{ \App\Models\RiwayatPekerjaan::count() }}</div>
                     <div class="text-gray-600 mt-2">Riwayat Pekerjaan</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-4xl font-bold text-blue-600">{{ \App\Models\Survei::where('aktif', true)->count() }}</div>
+                    <div class="text-4xl font-bold text-green-700">{{ \App\Models\Survei::where('aktif', true)->count() }}</div>
                     <div class="text-gray-600 mt-2">Survei Aktif</div>
                 </div>
             </div>
@@ -150,76 +150,76 @@
                         </div>
                         <p class="text-gray-600">"Platform yang user-friendly dan mudah diakses. Saya senang bisa berkontribusi data untuk pengembangan kualitas pendidikan di almamater saya."</p>
                     </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="py-16 bg-green-700 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold mb-6">Bergabunglah dengan Komunitas Alumni UNP Kediri</h3>
+            <p class="text-xl mb-8">Daftarkan diri Anda sekarang dan berkontribusilah dalam pengembangan pendidikan di almamater kita.</p>
+            <div class="flex justify-center">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="px-8 py-3 bg-white text-green-700 rounded-md font-semibold hover:bg-gray-100">Akses Dashboard</a>
+                @else
+                    <a href="{{ route('register') }}" class="px-8 py-3 bg-white text-green-700 rounded-md font-semibold hover:bg-gray-100">Daftar Sekarang</a>
+                @endauth
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-800 text-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-10">
+                        <div class="ml-4">
+                            <h4 class="text-lg font-bold">Sistem Tracer Study FIKS</h4>
+                            <p class="text-sm text-gray-400">Universitas Nusantara PGRI Kediri</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-gray-400">Jl. K.H. Ahmad Dahlan No.76, Mojoroto, Kec. Mojoroto, Kota Kediri, Jawa Timur 64112</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Tentang Kami</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white">Profil Universitas</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Visi & Misi</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Fasilitas</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Program Studi</h5>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white">Kebidanan</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Keperawatan</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Peternakan</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-lg font-semibold mb-4">Kontak</h5>
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-phone-alt mr-2 text-gray-400"></i> <span class="text-gray-400">(0354) 771576</span></li>
+                            <li class="flex items-center"><i class="fas fa-envelope mr-2 text-gray-400"></i> <span class="text-gray-400">info@unpkediri.ac.id</span></li>
+                            <li class="flex items-center"><i class="fas fa-globe mr-2 text-gray-400"></i> <span class="text-gray-400">www.unpkediri.ac.id</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - Universitas Nusantara PGRI Kediri</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
-
-        <!-- Call to Action -->
-        <div class="py-16 bg-blue-600 text-white">
-            <div class="container mx-auto px-6 text-center">
-                <h3 class="text-3xl font-bold mb-6">Bergabunglah dengan Komunitas Alumni UNP Kediri</h3>
-                <p class="text-xl mb-8">Daftarkan diri Anda sekarang dan berkontribusilah dalam pengembangan pendidikan di almamater kita.</p>
-                <div class="flex justify-center">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="px-8 py-3 bg-white text-blue-600 rounded-md font-semibold hover:bg-gray-100">Akses Dashboard</a>
-                    @else
-                        <a href="{{ route('register') }}" class="px-8 py-3 bg-white text-blue-600 rounded-md font-semibold hover:bg-gray-100">Daftar Sekarang</a>
-                    @endauth
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="py-10 bg-gray-800 text-white">
-            <div class="container mx-auto px-6">
-                <div class="flex flex-col md:flex-row justify-between">
-                    <div class="mb-6 md:mb-0">
-                        <div class="flex items-center">
-                            <img src="{{ asset('images/logo-unp.png') }}" alt="Logo UNP Kediri" class="h-10">
-                            <div class="ml-4">
-                                <h4 class="text-lg font-bold">Sistem Tracer Study FIKS</h4>
-                                <p class="text-sm text-gray-400">Universitas Nusantara PGRI Kediri</p>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-gray-400">Jl. K.H. Ahmad Dahlan No.76, Mojoroto, Kec. Mojoroto, Kota Kediri, Jawa Timur 64112</p>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                        <div>
-                            <h5 class="text-lg font-semibold mb-4">Tentang Kami</h5>
-                            <ul class="space-y-2">
-                                <li><a href="#" class="text-gray-400 hover:text-white">Profil Universitas</a></li>
-                                <li><a href="#" class="text-gray-400 hover:text-white">Visi & Misi</a></li>
-                                <li><a href="#" class="text-gray-400 hover:text-white">Fasilitas</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="text-lg font-semibold mb-4">Program Studi</h5>
-                            <ul class="space-y-2">
-                                <li><a href="#" class="text-gray-400 hover:text-white">Kebidanan</a></li>
-                                <li><a href="#" class="text-gray-400 hover:text-white">Keperawatan</a></li>
-                                <li><a href="#" class="text-gray-400 hover:text-white">Peternakan</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="text-lg font-semibold mb-4">Kontak</h5>
-                            <ul class="space-y-2">
-                                <li class="flex items-center"><i class="fas fa-phone-alt mr-2 text-gray-400"></i> <span class="text-gray-400">(0354) 771576</span></li>
-                                <li class="flex items-center"><i class="fas fa-envelope mr-2 text-gray-400"></i> <span class="text-gray-400">info@unpkediri.ac.id</span></li>
-                                <li class="flex items-center"><i class="fas fa-globe mr-2 text-gray-400"></i> <span class="text-gray-400">www.unpkediri.ac.id</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400">&copy; {{ date('Y') }} Sistem Tracer Study FIKS - Universitas Nusantara PGRI Kediri</p>
-                    <div class="flex space-x-4 mt-4 md:mt-0">
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </body>
+    </footer>
+</body>
 </html>
