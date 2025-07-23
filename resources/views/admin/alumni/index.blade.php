@@ -6,6 +6,9 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Daftar Alumni</h1>
         <div class="flex space-x-2">
+            <a href="{{ route('admin.alumni.export.csv') }}" class="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700">
+                <i class="fas fa-file-csv mr-2"></i> Export CSV
+            </a>
             <a href="{{ route('admin.alumni-approval.index') }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
                 <i class="fas fa-user-clock mr-2"></i> Persetujuan Alumni
             </a>
@@ -56,7 +59,7 @@
                 </div>
             </form>
         </div>
-        
+
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -116,19 +119,19 @@
                                     $pekerjaan = $alumnus->riwayatPekerjaan()->where('pekerjaan_saat_ini', true)->first();
                                     $pendidikan = $alumnus->pendidikanLanjut()->where('sedang_berjalan', true)->first();
                                 @endphp
-                                
+
                                 @if($pekerjaan)
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                         Bekerja
                                     </span>
                                 @endif
-                                
+
                                 @if($pendidikan)
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 {{ $pekerjaan ? 'ml-1' : '' }}">
                                         Studi Lanjut
                                     </span>
                                 @endif
-                                
+
                                 @if(!$pekerjaan && !$pendidikan)
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                         Belum Update
@@ -163,7 +166,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div class="px-6 py-4 border-t">
             {{ $alumni->withQueryString()->links() }}
         </div>
@@ -178,7 +181,7 @@
             })
             ->get();
     @endphp
-    
+
     @if(count($usersWithoutProfile) > 0)
         <div class="mt-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Alumni Tanpa Profil</h2>
@@ -189,7 +192,7 @@
                         Berikut adalah daftar alumni yang sudah disetujui tetapi belum memiliki profil. Klik tombol "Buat Profil" untuk membuat profil alumni.
                     </p>
                 </div>
-                
+
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -245,11 +248,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.delete-btn');
-        
+
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
-                
+
                 if (confirm('Apakah Anda yakin ingin menghapus data alumni ini?')) {
                     document.getElementById(`delete-form-${id}`).submit();
                 }
