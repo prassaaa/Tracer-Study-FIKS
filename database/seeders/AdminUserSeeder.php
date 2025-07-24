@@ -15,6 +15,7 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@tracerstudy.com',
             'password' => Hash::make('admin12345'),
             'role' => 'admin',
+            'status' => 'approved',
         ]);
     }
 }

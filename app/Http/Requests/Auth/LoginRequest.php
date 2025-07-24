@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nim' => ['required', 'string'],
+            'login_field' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -41,32 +41,50 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('nim', 'password'), $this->boolean('remember'))) {
+        $loginField = $this->input('login_field');
+        $password = $this->input('password');
+
+        // Determine if login field is email or NPM
+        $isEmail = filter_var($loginField, FILTER_VALIDATE_EMAIL);
+
+        $credentials = [
+            'password' => $password
+        ];
+
+        if ($isEmail) {
+            // Login with email (for admin)
+            $credentials['email'] = $loginField;
+        } else {
+            // Login with NPM (for alumni)
+            $credentials['nim'] = $loginField;
+        }
+
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'nim' => trans('auth.failed'),
+                'login_field' => trans('auth.failed'),
             ]);
         }
 
         // Check user status after successful authentication
         $user = Auth::user();
-        
+
         if ($user->status === 'pending') {
             Auth::logout();
             RateLimiter::clear($this->throttleKey());
-            
+
             throw ValidationException::withMessages([
-                'nim' => 'Akun Anda masih menunggu persetujuan admin. Silakan coba lagi nanti.',
+                'login_field' => 'Akun Anda masih menunggu persetujuan admin. Silakan coba lagi nanti.',
             ]);
         }
-        
+
         if ($user->status === 'rejected') {
             Auth::logout();
             RateLimiter::clear($this->throttleKey());
-            
+
             throw ValidationException::withMessages([
-                'nim' => 'Pendaftaran Anda telah ditolak. Silakan hubungi administrator untuk informasi lebih lanjut.',
+                'login_field' => 'Pendaftaran Anda telah ditolak. Silakan hubungi administrator untuk informasi lebih lanjut.',
             ]);
         }
 
@@ -89,7 +107,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'nim' => trans('auth.throttle', [
+            'login_field' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -101,6 +119,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('nim')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('login_field')).'|'.$this->ip());
     }
 }

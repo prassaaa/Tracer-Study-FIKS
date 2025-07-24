@@ -55,16 +55,32 @@
                     @csrf
 
                     <div class="mb-5">
-                        <label for="nim" class="block text-sm font-medium text-gray-700 mb-1">NPM</label>
+                        <label for="login_field" class="block text-sm font-medium text-gray-700 mb-1">Email atau NPM</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                                <i class="fas fa-id-card"></i>
+                                <i class="fas fa-user" id="login-icon"></i>
                             </div>
-                            <input id="nim" type="text" name="nim" value="{{ old('nim') }}" required autofocus
+                            <input id="login_field" type="text" name="login_field" value="{{ old('login_field', old('nim')) }}" required autofocus
                                 class="pl-10 w-full h-10 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all input-focus"
-                                placeholder="Masukkan NPM Anda">
+                                placeholder="Masukkan Email atau NPM">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Admin: gunakan email | Alumni: gunakan NPM
+                        </p>
+                        @error('login_field')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
+                        @enderror
                         @error('nim')
+                            <p class="mt-2 text-sm text-red-600">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                        @error('email')
                             <p class="mt-2 text-sm text-red-600">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ $message }}
@@ -126,6 +142,7 @@
     </div>
 
     <script>
+        // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
             const icon = this.querySelector('i');
@@ -138,6 +155,26 @@
                 password.type = 'password';
                 icon.classList.remove('fa-eye-slash');
                 icon.classList.add('fa-eye');
+            }
+        });
+
+        // Dynamic icon change based on input type
+        document.getElementById('login_field').addEventListener('input', function() {
+            const loginIcon = document.getElementById('login-icon');
+            const value = this.value;
+
+            // Check if input looks like an email
+            if (value.includes('@') && value.includes('.')) {
+                loginIcon.classList.remove('fa-user', 'fa-id-card');
+                loginIcon.classList.add('fa-envelope');
+            } else if (value.length > 0) {
+                // Looks like NPM
+                loginIcon.classList.remove('fa-user', 'fa-envelope');
+                loginIcon.classList.add('fa-id-card');
+            } else {
+                // Default state
+                loginIcon.classList.remove('fa-envelope', 'fa-id-card');
+                loginIcon.classList.add('fa-user');
             }
         });
     </script>
